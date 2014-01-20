@@ -1,0 +1,8 @@
+source 'https://rubygems.org'
+gem 'sinatra'
+# gem 'rerun'
+gem 'builder'
+gem 'data_mapper'
+gem 'dm-sqlite-adapter'
+gem 'shotgun'
+gem 'slim'

@@ -1,0 +1,19 @@
+doctype html
+  html
+    head
+      meta charset="utf8"
+      title This is a test
+      /[if lt IE 9]
+        script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"
+      link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/start/jquery-ui.css"
+      script src="http://code.jquery.com/jquery-2.0.3.js"
+      script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"
+      javascript:
+        !(document).ready(function() {$('#tabs').tabs()});
+    header
+      h1 boards
+    body
+      =yield
+    footer
+      p &copy; icke
+    
