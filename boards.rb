@@ -3,6 +3,7 @@ require 'bundler'
 Bundler.require
 
 require 'slim/logic_less'
+require 'sinatra/reloader' if development?
 
 enable :sessions
 
