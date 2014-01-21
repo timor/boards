@@ -2,9 +2,12 @@ require 'rubygems'
 require 'bundler'
 Bundler.require
 
+require 'slim/logic_less'
+
 enable :sessions
 
 set :session_secret, 'board secret'
+set :slim, :pretty => true
 
 DataMapper::Logger.new($stdout, :debug)
 DataMapper::setup(:default, "sqlite3://#{Dir.pwd}/boards.db")
@@ -89,16 +92,15 @@ class <<h
   end
 end
 
-
-
-get '/boards/?' do
-  h.header!("List of Boards") do
-  end
+get '/views/*' do |v|
+  @boards=Board.all
+  puts "Boards: ",@boards
+  slim v.to_sym
 end
 
-get '/boards/create' do
-  h.header!("Create new Board") do
-  end
+post '/boards/create_empty' do
+  puts "creating empty board"
+  Board.create(:title => "New Board")
 end
 
 get '/cards/new' do

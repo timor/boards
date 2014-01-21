@@ -3,6 +3,6 @@ require 'bundler'
 
 Bundler.require
 
-require './board'
+require './boards'
 # use Rack::Reloader
 run Sinatra::Application

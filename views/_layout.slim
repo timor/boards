@@ -8,26 +8,17 @@ html
     link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/redmond/jquery-ui.css"
     script src="http://code.jquery.com/jquery-2.0.3.js"
     script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"
-    script src="boards.js"
+    javascript:
+      !(document).ready(function() {$('#tabs').tabs()});
     sass:
-      header,footer,section,aside,nav
-        display: block
-      footer
-        text-align: center
-      section,nav
+      #sidebar
+        position: fixed
         float: left
-      section#main
-        width: 80%
-      nav
-        width: 20%
+        left: 0px
+  header
+    h1 boards
   body
-    header
-      h1 boards
-    nav#sidebar
-    section#main
-      ul
-        li hey
-        li hey
-        li ho
+    == yield
   footer
     p &copy; icke
+    
