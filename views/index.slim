@@ -8,9 +8,13 @@ html
     link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/redmond/jquery-ui.css"
     script src="http://code.jquery.com/jquery-2.0.3.js"
     script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"
+    script src="http://raw.github.com/brandonaaron/livequery/master/jquery.livequery.js"
     script src="boards.js"
-    link rel="stylesheet" type="text/css" href="http://www.klippel.de/fileadmin/styles/klippel/css/screen/content.css"
+    /link rel="stylesheet" type="text/css" href="http://www.klippel.de/fileadmin/styles/klippel/css/screen/content.css"
     sass:
+      *
+        color: #444444
+        font-family: 'Trebuchet MS',Verdana,Helvetica,Arial,sans-serif
       header,footer,section,aside,nav
         display: block
       footer
@@ -19,16 +23,24 @@ html
         float: left
       section#main
         width: 80%
-      nav
+      #sidebar
         width: 20%
+        ul
+          list-style-type: none
+        button
+          font-size: 0.7em
+      .hover-tool-group .hover-tool
+        display: none
+      .hover-tool-group:hover .hover-tool
+        display: inline-block
+      
   body
     header
       h1 boards
+    #tools
+      button#reload Update
     nav#sidebar
+      ul.dynamic#boards_list
     section#main
-      ul
-        li hey
-        li hey
-        li ho
   footer
     p &copy; icke
