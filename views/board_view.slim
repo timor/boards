@@ -1,0 +1,12 @@
+- board
+  h1.editable-board-title data-board-id="#{id}" = title
+  - columns
+    div.column
+      h2 = title
+      button.add-card data-column-id="#{id}" add card
+      div.column-body data-column-id="#{id}"
+        - cards
+          div.card
+            div.card-header: strong title
+            div.card-body = body
+          
