@@ -88,7 +88,7 @@ get '/view/*/*' do |resource,vtype|
     @board=Board.get(vtype)
     return "board not found" unless @board
     session[:current_board]=vtype
-    last_modified(@board.updated_at)
+    # last_modified(@board.updated_at)
     vtype="view"
   else return 404 end
   slim (resource+"_"+vtype).to_sym

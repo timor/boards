@@ -9,10 +9,12 @@ html
     script src="http://code.jquery.com/jquery-2.0.3.js"
     script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"
     script src="jquery.livequery.min.js"
+    script src="jquery.jeditable.js"
     script src="boards.js"
     /link rel="stylesheet" type="text/css" href="http://www.klippel.de/fileadmin/styles/klippel/css/screen/content.css"
     sass:
       *
+        cursor: default
         color: #444444
         font-family: 'Trebuchet MS',Verdana,Helvetica,Arial,sans-serif
       header,footer,section,aside,nav
@@ -29,6 +31,8 @@ html
           list-style-type: none
         button
           font-size: 0.7em
+      .editable
+        cursor: text
       .hover-tool-group .hover-tool
         display: none
       .hover-tool-group:hover .hover-tool
