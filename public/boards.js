@@ -1,7 +1,12 @@
 function update() {
     $('.dynamic').each(function(){
         url="view/"+this.id.replace("_","/");
-        $(this).load(url)});
+        $.ajax({url: url,
+                ifModified: true,
+                context: this,
+                success: function(data){
+                    $(this).html(data)}});
+        });
 }
 
 function displayBoard(id) {

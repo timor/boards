@@ -11,36 +11,24 @@ set :session_secret, 'board secret'
 set :slim, :pretty => true
 
 # potentially very slow
-STDOUT.sync=true
+# STDOUT.sync=true
 
 DataMapper::Logger.new($stdout, :debug)
 DataMapper::setup(:default, "sqlite3://#{Dir.pwd}/boards.db")
 
 h=Builder::XmlMarkup.new(:indent => 2)
 
-
 class Card
   include DataMapper::Resource
   property :id, Serial
   property :title, String
   property :body, Text
-  property :created_at, DateTime
-  property :modified_at, DateTime
-end
+  belongs_to :column, :required => false
 
-class Board
-  include DataMapper::Resource
-  property :id, Serial
-  property :title, String
-  property :created_at, DateTime
-  has n, :columns, constraint: :destroy
-
-  def self.create_default(args)
-    board=create(args);
-    board.columns.create(:title => 'Todo');
-    board.columns.create(:title => 'Doing');
-    board.columns.create(:title => 'Done');
-    board
+  timestamps :at
+  
+  after :save do
+    column.touch if column
   end
 end
 
@@ -49,8 +37,31 @@ class Column
   property :id, Serial
   property :title, String
   property :pos, Integer
-  has n, :cards
+  property :new_cards_allowed, Boolean, :default => false
+
+  has n, :cards, :constraint => :destroy
   belongs_to :board
+  timestamps :at
+
+  after :save do
+    board.touch
+  end
+end
+
+class Board
+  include DataMapper::Resource
+  property :id, Serial
+  property :title, String
+  has n, :columns, constraint: :destroy
+  timestamps :at
+  
+  def self.create_default(args)
+    board=create(args);
+    board.columns.create(:title => 'Todo', :new_cards_allowed => true);
+    board.columns.create(:title => 'Doing');
+    board.columns.create(:title => 'Done');
+    board
+  end
 end
 
 DataMapper.finalize
@@ -76,8 +87,8 @@ get '/view/*/*' do |resource,vtype|
   when :board then
     @board=Board.get(vtype)
     return "board not found" unless @board
-    puts "board #{@board.title} with #{@board.columns.length} columns"
     session[:current_board]=vtype
+    last_modified(@board.updated_at)
     vtype="view"
   else return 404 end
   slim (resource+"_"+vtype).to_sym
@@ -101,17 +112,24 @@ post '/boards/*/create_column' do |board_id|
   puts "creating column in board #{board_id}...NOT!"
 end
 
+# get '/move_over' do
+#   b=Board.first
+#   b.columns[2].cards.push b.columns[0].cards.pop
+#   b.save
+#   ""
+# end
+
 post '/columns/*/create_card' do |col_id|
   puts "creating card in column #{col_id}"
   Column.get(col_id).cards.create(title: "card title", body: "card body")
 end
 
 # explicitely disable caching for ajax requests: fuck you IE!
-after '/view/*' do
-  if request.env["HTTP_X_REQUESTED_WITH"] == "XMLHttpRequest"
-    response["Expires"]="-1"
-  end
-end
+# after '/view/*' do
+#   if request.env["HTTP_X_REQUESTED_WITH"] == "XMLHttpRequest"
+#     response["Expires"]="-1"
+#   end
+# end
 
   
 get '/' do
