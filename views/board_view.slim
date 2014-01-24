@@ -2,15 +2,18 @@
   h1: span.editable data-id="#{id}" data-resource="board" data-field="title" = title
   - columns
     div.column
-      h2: spane.editable data-id="#{id}" data-resource="column" data-field="title" = title
+      h2: span.editable data-id="#{id}" data-resource="column" data-field="title" = title
       button.add-card data-column-id="#{id}" add card
       div.column-body data-column-id="#{id}"
         - cards
           div.card
             div.card-header
-              strong.editable data-id="#{id}" data-resource="card" data-field="title" = title
+              strong.editable.card-title data-id="#{id}" data-resource="card" data-field="title" = title
             div.card-body.editable data-id="#{id}" data-resource="card" data-field="body" = body
 javascript:
   $("#main .editable").editable();
-      
+  $("#main .column-body").sortable({
+      connectWith: ".column-body",
+      handler: ".card-header",
+      cancel: ".card-title"});
     
