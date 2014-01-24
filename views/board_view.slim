@@ -1,19 +1,39 @@
 - board
-  h1: span.editable data-id="#{id}" data-resource="board" data-field="title" = title
+  h1: span.board-title.editable data-id="#{id}" data-resource="board" data-field="title" = title
   - columns
     div.column
-      h2: span.editable data-id="#{id}" data-resource="column" data-field="title" = title
+      h2: span.column-title.editable data-id="#{id}" data-resource="column" data-field="title" = title
       button.add-card data-column-id="#{id}" add card
       div.column-body data-column-id="#{id}"
         - cards
           div.card
             div.card-header
-              strong.editable.card-title data-id="#{id}" data-resource="card" data-field="title" = title
-            div.card-body.editable data-id="#{id}" data-resource="card" data-field="body" = body
+              strong.card-title.editable data-id="#{id}" data-resource="card" data-field="title" = title
+            p.card-body.editable data-id="#{id}" data-resource="card" data-field="body" = body
 javascript:
-  $("#main .editable").editable();
+  $("#main .card-body").editable("/card",{
+      type: "textarea",
+      submit: "OK",
+      submitdata: { _method: "put",
+                    field: "body"},
+      cancel: "cancel"}); 
+  $("#main .column-title").editable("/column",{
+      submit: "OK",
+      submitdata: { _method: "put",
+                    field: "title" },
+      cancel: "cancel"});
+  $("#main .card-title").editable("/card",{
+      submit: "OK",
+      submitdata: { _method: "put",
+                    field: "title" },
+      cancel: "cancel"});
+  $("#main .board-title").editable("/board",{
+      submit: "OK",
+      submitdata: { _method: "put",
+                    field: "title"},
+      cancel: "cancel"});
   $("#main .column-body").sortable({
       connectWith: ".column-body",
-      handler: ".card-header",
+      handle: ".card-header",
       cancel: ".card-title"});
     

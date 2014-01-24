@@ -8,7 +8,7 @@ require 'sinatra/reloader' if development?
 enable :sessions
 
 set :session_secret, 'board secret'
-set :slim, :pretty => true
+set :slim, :pretty => false
 
 # potentially very slow
 # STDOUT.sync=true
@@ -121,7 +121,16 @@ end
 
 post '/columns/*/create_card' do |col_id|
   puts "creating card in column #{col_id}"
-  Column.get(col_id).cards.create(title: "card title", body: "card body")
+  Column.get(col_id).cards.create(title: "card title", body: "teh card body")
+end
+
+put '/*' do |resource|
+  coll = case resource
+         when 'board' then Board
+         when 'card' then Card
+         when 'column' then Column
+         end
+  coll.get(params["id"]).update(params["field"] => params["value"])
 end
 
 # explicitely disable caching for ajax requests: fuck you IE!
