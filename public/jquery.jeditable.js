@@ -320,7 +320,7 @@
                               /* Add edited content and id of edited element to POST. */
                               var submitdata = {};
                               submitdata[settings.name] = input.val();
-                              submitdata[settings.id] = self.id;
+                              submitdata[settings.id] = self.getAttribute('data-id');
                               /* Add extra data to be POST:ed. */
                               if ($.isFunction(settings.submitdata)) {
                                   $.extend(submitdata, settings.submitdata.apply(self, [self.revert, settings]));
