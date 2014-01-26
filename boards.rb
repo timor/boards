@@ -53,6 +53,7 @@ class Board
   property :id, Serial
   property :title, String
   has n, :columns, constraint: :destroy
+  belongs_to :user
   timestamps :at
   
   def self.create_default(args)
@@ -62,6 +63,14 @@ class Board
     board.columns.create(:title => 'Done');
     board
   end
+end
+
+class User
+  include DataMapper::Resource
+  proporty :id, Serial
+  property :name, String
+  has n, :boards
+  has n, :cards
 end
 
 DataMapper.finalize
