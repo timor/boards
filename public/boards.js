@@ -25,9 +25,9 @@ $(function() {
     // thanks IE for not supporting dataset!
         .on("click",".board-selector",function(e) {displayBoard(e.target.getAttribute('data-board-id'));return false;})
     // .on("click","#create_board",function() {$.post('boards/create_empty'); update()})
-        .on("click","button.trash",function(e) {$.post('delete/board/'+e.target.getAttribute('data-board-id'),{},update)});
-    $('#main')
-        .on("click",".add-card",function(e) {$.post('columns/'+e.target.getAttribute('data-column-id')+'/create_card',{},update)});
+        .on("click","button.trash",function(e) {$.post('delete/board/'+$(e.target).closest('.board')[0].getAttribute('data-id'),{},update)});
+//    $('#main')
+//        .on("click",".add-card",function(e) {$.post('columns/'+e.target.getAttribute('data-column-id')+'/create_card',{},update)});
     $('button.trash').livequery(function(){
         $(this).button({icons: { primary: "ui-icon-trash"}, text: false})});
     $('button#create_board').livequery(function(){
