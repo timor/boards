@@ -67,7 +67,7 @@ end
 
 class User
   include DataMapper::Resource
-  proporty :id, Serial
+  property :id, Serial
   property :name, String
   has n, :boards
   has n, :cards
