@@ -122,7 +122,7 @@ end
 post '/columns/*/create_card' do |col_id|
   puts "creating card in column #{col_id}"
   unless col=Column.get(col_id)
-    return [456,"unknown column: #{col_id}"]
+    return [400,"unknown column: #{col_id}"]
   end
   Column.get(col_id).cards.create(title: "card title", body: "teh card body")
 end
