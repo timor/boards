@@ -24,6 +24,7 @@ class Card
   property :title, String
   property :body, Text
   belongs_to :column, :required => false
+  belongs_to :user, :required => false
 
   timestamps :at
   
@@ -53,7 +54,7 @@ class Board
   property :id, Serial
   property :title, String
   has n, :columns, constraint: :destroy
-  belongs_to :user
+  has 1, :owner,'User', require: false
   timestamps :at
   
   def self.create_default(args)
@@ -69,7 +70,7 @@ class User
   include DataMapper::Resource
   property :id, Serial
   property :name, String
-  has n, :boards
+  # has n, :boards
   has n, :cards
 end
 
@@ -131,9 +132,12 @@ end
 post '/columns/*/create_card' do |col_id|
   puts "creating card in column #{col_id}"
   unless col=Column.get(col_id)
-    return [400,"unknown column: #{col_id}"]
+    return [400,["unknown column: #{col_id}"]]
   end
-  Column.get(col_id).cards.create(title: "card title", body: "teh card body")
+  card = Column.get(col_id).cards.create(title: "card title", body: "teh card body")
+  if card.errors.length > 0
+    return [400, ["there were #{card.errors.length} errors while attempting to create card"]]
+  end
 end
 
 put '/*' do |resource|
