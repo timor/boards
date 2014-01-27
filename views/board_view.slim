@@ -10,7 +10,7 @@
             div.card data-resource="card" data-id="#{id}"
               div.card-header
                 strong.card-title.editable data-field="title" = title
-              p.card-body.editable-area data-field="body" = body
+              p.card-body.editable.text-area data-field="body" = body
 javascript:
   function findData(object,name) {
       return $(object).closest("["+name+"]").attr(name)};
@@ -18,7 +18,7 @@ javascript:
       return { resource: findData(this,'data-resource'),
                field: findData(this,'data-field'),
                id: findData(this,'data-id')}};
-  $("#main .editable-area").editable("/change_field",{
+  $("#main .editable .textarea").editable("/change_field",{
       type: "textarea",
       submit: "OK",
       method: "PUT",

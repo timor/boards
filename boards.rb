@@ -11,7 +11,7 @@ set :session_secret, 'board secret'
 set :slim, :pretty => false
 
 # potentially very slow
-# STDOUT.sync=true
+STDOUT.sync=true
 
 DataMapper::Model.raise_on_save_failure = true
 DataMapper::Logger.new($stdout, :debug)
@@ -55,7 +55,7 @@ class Board
   property :id, Serial
   property :title, String
   has n, :columns, constraint: :destroy
-  belongs_to :owner,'User', required: false
+  belongs_to :owner, 'User', :required => false
   timestamps :at
   
   def self.create_default(args)
@@ -72,7 +72,7 @@ class User
   property :id, Serial
   property :name, String
   # has n, :boards
-  has n, :cards
+  # has n, :cards
 end
 
 DataMapper.finalize
@@ -81,7 +81,7 @@ DataMapper.auto_upgrade!
 require 'pp'
 get '/view/main' do
   bid=session[:current_board]
-  if bid
+  if Board.get(bid)
     redirect "/view/board/#{bid}"
   else
     slim "h1 Please select or create a board!"
@@ -107,7 +107,17 @@ end
 
 post '/boards/create_empty' do
   puts "creating empty board"
-  board=Board.create_default(:title => "New Board")
+  begin
+    board=Board.create_default(:title => "New Board")
+  rescue DataMapper::SaveFailureError => err
+    res= err.resource
+    str="save failure on #{res}"
+    res.errors.each do |e|
+      str += "#{e}"
+      str +="\n"
+    end
+    return [500, str]
+  end
 end
 
 post '/delete/board/*' do |id|
@@ -154,7 +164,8 @@ end
 #     response["Expires"]="-1"
 #   end
 # end
-error 500..599 do
+
+error do
   'Sorry, internal error: '+env['sinatra.error']
 end
 
