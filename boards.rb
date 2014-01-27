@@ -13,6 +13,7 @@ set :slim, :pretty => false
 # potentially very slow
 # STDOUT.sync=true
 
+DataMapper::Model.raise_on_save_failure = true
 DataMapper::Logger.new($stdout, :debug)
 DataMapper::setup(:default, "sqlite3://#{Dir.pwd}/boards.db")
 
@@ -23,8 +24,8 @@ class Card
   property :id, Serial
   property :title, String
   property :body, Text
-  belongs_to :column, :required => false
-  belongs_to :user, :required => false
+  belongs_to :column, required: false
+  belongs_to :user, required: false
 
   timestamps :at
   
@@ -38,9 +39,9 @@ class Column
   property :id, Serial
   property :title, String
   property :pos, Integer
-  property :new_cards_allowed, Boolean, :default => false
+  property :new_cards_allowed, Boolean, default: false
 
-  has n, :cards, :constraint => :destroy
+  has n, :cards, constraint: :destroy
   belongs_to :board
   timestamps :at
 
@@ -54,7 +55,7 @@ class Board
   property :id, Serial
   property :title, String
   has n, :columns, constraint: :destroy
-  has 1, :owner,'User', require: false
+  belongs_to :owner,'User', required: false
   timestamps :at
   
   def self.create_default(args)
@@ -134,19 +135,17 @@ post '/columns/*/create_card' do |col_id|
   unless col=Column.get(col_id)
     return [400,["unknown column: #{col_id}"]]
   end
-  card = Column.get(col_id).cards.create(title: "card title", body: "teh card body")
-  if card.errors.length > 0
-    return [400, ["there were #{card.errors.length} errors while attempting to create card"]]
-  end
+  col.cards.create(title: "card title", body: "teh card body")
 end
 
-put '/*' do |resource|
-  coll = case resource
+put '/change_field' do
+  coll = case params['resource']
          when 'board' then Board
          when 'card' then Card
          when 'column' then Column
          end
   coll.get(params["id"]).update(params["field"] => params["value"])
+  params["value"]
 end
 
 # explicitely disable caching for ajax requests: fuck you IE!
@@ -155,8 +154,10 @@ end
 #     response["Expires"]="-1"
 #   end
 # end
+error 500..599 do
+  'Sorry, internal error: '+env['sinatra.error']
+end
 
-  
 get '/' do
   slim :index
 end

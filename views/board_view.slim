@@ -2,37 +2,36 @@
   h1: span.board-title.editable data-id="#{id}" data-resource="board" data-field="title" = title
   div.board data-id="#{id}"
     - columns
-      div.column data-id="#{id}"
-        h2: span.column-title.editable data-id="#{id}" data-resource="column" data-field="title" = title
+      div.column data-id="#{id}" data-resource="column"
+        h2: span.column-title.editable data-field="title" = title
         button.add-card add card
         div.column-body
           - cards
-            div.card
+            div.card data-resource="card" data-id="#{id}"
               div.card-header
-                strong.card-title.editable data-id="#{id}" data-resource="card" data-field="title" = title
-              p.card-body.editable data-id="#{id}" data-resource="card" data-field="body" = body
+                strong.card-title.editable data-field="title" = title
+              p.card-body.editable-area data-field="body" = body
 javascript:
-  $("#main .card-body").editable("/card",{
+  function findData(object,name) {
+      return $(object).closest("["+name+"]").attr(name)};
+  function editableSubmit(){
+      return { resource: findData(this,'data-resource'),
+               field: findData(this,'data-field'),
+               id: findData(this,'data-id')}};
+  $("#main .editable-area").editable("/change_field",{
       type: "textarea",
       submit: "OK",
-      submitdata: { _method: "put",
-                    field: "body"},
-      cancel: "cancel"}); 
-  $("#main .column-title").editable("/column",{
+      method: "PUT",
+      indicator: "saving...",
+      submitdata: editableSubmit,
+      cancel: "Cancel"}); 
+  $("#main .editable").editable("/change_field",{
       submit: "OK",
-      submitdata: { _method: "put",
-                    field: "title" },
-      cancel: "cancel"});
-  $("#main .card-title").editable("/card",{
-      submit: "OK",
-      submitdata: { _method: "put",
-                    field: "title" },
-      cancel: "cancel"});
-  $("#main .board-title").editable("/board",{
-      submit: "OK",
-      submitdata: { _method: "put",
-                    field: "title"},
-      cancel: "cancel"});
+      method: "PUT",
+      indicator: "saving...",
+      submitdata: editableSubmit,
+      cancel: "Cancel",
+      cssclass: "editing",});
   $("#main .column-body").sortable({
       connectWith: ".column-body",
       handle: ".card-header",
