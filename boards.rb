@@ -19,14 +19,39 @@ DataMapper::setup(:default, "sqlite3://#{Dir.pwd}/boards.db")
 
 h=Builder::XmlMarkup.new(:indent => 2)
 
+COLORS=["0xFFFFB300",
+        "0xFF803E75",
+        "0xFFFF6800",
+        "0xFFA6BDD7",
+        "0xFFC10020",
+        "0xFFCEA262",
+        "0xFF817066",
+        "0xFF007D34",
+        "0xFFF6768E",
+        "0xFF00538A",
+        "0xFFFF7A5C",
+        "0xFF53377A",
+        "0xFFFF8E00",
+        "0xFFB32851",
+        "0xFFF4C800",
+        "0xFF7F180D",
+        "0xFF93AA00",
+        "0xFF593315",
+        "0xFFF13A13",
+        "0xFF232C16"]
+def css_color(num)
+  COLORS[num % COLORS.length]
+end
+
 class Card
   include DataMapper::Resource
   property :id, Serial
   property :title, String
   property :body, Text
+  property :priority, Enum[:normal, :high, :low], default: :normal
   belongs_to :column, required: false
-  belongs_to :user, required: false
-
+  belongs_to :creator,'User', required: false
+  belongs_to :owner,'User', required: false
   timestamps :at
   
   after :save do
@@ -40,7 +65,6 @@ class Column
   property :title, String
   property :pos, Integer
   property :new_cards_allowed, Boolean, default: false
-
   has n, :cards, constraint: :destroy
   belongs_to :board
   timestamps :at
@@ -71,6 +95,7 @@ class User
   include DataMapper::Resource
   property :id, Serial
   property :name, String
+  property :color, Integer      # indexes COLOR
   # has n, :boards
   # has n, :cards
 end
