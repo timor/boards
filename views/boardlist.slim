@@ -1,0 +1,12 @@
+- boards
+  li.hover-tool-group.board data-board-id="#{id}"
+    a.board-selector href="#" =title
+    button.hover-tool.trash delete
+li: button#create_board +
+javascript:
+  $('#create_board').button({icons: {primary: "ui-icon-plusthick"}, text: false})
+    .click(function(){$.post('boards/create_empty',{},updateAll)});
+  $('.board-selector').click(function(e){
+      displayBoard(findData(e.target,'data-board-id')); return false});
+  $('button.trash').button({icons: { primary: "ui-icon-trash"}, text: false})
+    .click(function(e){$.post('delete/board/'+findData(e.target,'data-board-id'),{}, updateAll)});

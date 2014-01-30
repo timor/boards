@@ -1,0 +1,38 @@
+doctype html
+html
+  head
+    meta charset="utf8"
+    title This is a test
+    /[if lt IE 9]
+      script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"
+    link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/redmond/jquery-ui.css"
+    script src="http://code.jquery.com/jquery-2.0.3.js"
+    script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"
+    script src="jquery.livequery.min.js"
+    script src="jquery.jeditable.js"
+    /script src="boards.js"
+    /link rel="stylesheet" type="text/css" href="http://www.klippel.de/fileadmin/styles/klippel/css/screen/content.css"
+    link rel="stylesheet" type="text/css" href="/style.css"
+    javascript:
+      function findData(object,name) {
+         return $(object).closest("["+name+"]").attr(name)};
+      // takes a jquery object
+      function updateElt(e) {
+            url="view/"+e.attr('id').replace("_","/");
+            $.ajax({url: url,
+                    ifModified: true,
+                    context: e,
+                    success: function(data){
+                        $(this).html(data)}});
+        };
+      function updateAll() {
+          $('.dynamic').each(function(){
+              updateElt($(this))})};
+      function displayBoard(id) {
+          $('#main').load("view/board/"+id)
+      };
+  body
+    == yield
+  footer
+    div.log
+    p &copy; icke

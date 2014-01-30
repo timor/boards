@@ -8,3 +8,5 @@ gem 'dm-sqlite-adapter'
 gem 'shotgun'
 gem 'slim'
 gem 'sass'
+gem 'tux'
+

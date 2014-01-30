@@ -12,8 +12,6 @@
                 strong.card-title.editable data-field="title" = title
               p.card-body.editable.text-area data-field="body" = body
 javascript:
-  function findData(object,name) {
-      return $(object).closest("["+name+"]").attr(name)};
   function editableSubmit(){
       return { resource: findData(this,'data-resource'),
                field: findData(this,'data-field'),

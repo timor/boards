@@ -49,6 +49,7 @@ class Card
   property :title, String
   property :body, Text
   property :priority, Enum[:normal, :high, :low], default: :normal
+  property :blocked, Boolean
   belongs_to :column, required: false
   belongs_to :creator,'User', required: false
   belongs_to :owner,'User', required: false
@@ -109,8 +110,12 @@ get '/view/main' do
   if Board.get(bid)
     redirect "/view/board/#{bid}"
   else
-    slim "h1 Please select or create a board!"
+    slim "h1 Please select or create a board!", layout: false
   end
+end
+
+get '/style.css' do
+  sass :style
 end
 
 get '/view/*/*' do |resource,vtype|
@@ -124,10 +129,17 @@ get '/view/*/*' do |resource,vtype|
     @board=Board.get(vtype)
     return "board not found" unless @board
     session[:current_board]=vtype
-    # last_modified(@board.updated_at)
+    last_modified(@board.updated_at)
     vtype="view"
   else return 404 end
-  slim (resource+"_"+vtype).to_sym
+  slim (resource+"_"+vtype).to_sym, layout: false
+end
+
+get '/view/*' do |page|
+  @boards=Board.all
+  @cards=Card.all
+  @users=User.all
+  slim page.to_sym, layout: false
 end
 
 post '/boards/create_empty' do
@@ -157,13 +169,6 @@ end
 post '/boards/*/create_column' do |board_id|
   puts "creating column in board #{board_id}...NOT!"
 end
-
-# get '/move_over' do
-#   b=Board.first
-#   b.columns[2].cards.push b.columns[0].cards.pop
-#   b.save
-#   ""
-# end
 
 post '/columns/*/create_card' do |col_id|
   puts "creating card in column #{col_id}"
