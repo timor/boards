@@ -118,21 +118,20 @@ get '/style.css' do
   sass :style
 end
 
-get '/view/*/*' do |resource,vtype|
+get '/view/*/*' do |resource,id|
   puts "view request"
   case resource.to_sym
-  when :boards then 
-    @boards=Board.all
-  when :cards then
-    @cards=Card.all
+  when :card then
+    @card=Card.get(id)
+    halt [400, "card not found"] unless @card
+    last_modified(@card.updated_at)
   when :board then
-    @board=Board.get(vtype)
-    return "board not found" unless @board
-    session[:current_board]=vtype
+    @board=Board.get(id)
+    halt [400, "board not found"] unless @board
+    session[:current_board]=id
     last_modified(@board.updated_at)
-    vtype="view"
   else return 404 end
-  slim (resource+"_"+vtype).to_sym, layout: false
+  slim (resource).to_sym, layout: false
 end
 
 get '/view/*' do |page|
