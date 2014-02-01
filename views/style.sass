@@ -22,7 +22,7 @@ section#main
 .editing
   font-size: 0.5em
   font-weight: normal
-.editable
+.editable, .edit_area
   cursor: text
 .hover-tool-group .hover-tool
   display: none
@@ -31,16 +31,20 @@ section#main
 .column
   float: left
   margin-right: 1em
+  position: relative
 .column-body
   padding-bottom: 50px
 .error
   color: #ee0000
 .card
   width: 200px
+  /* max-height: 150px
+  position: relative
   margin-bottom: 1em
   border-radius: 1em
   border: 1px solid
   background: lavender
+  /* overflow: hidden
   .card-header
     cursor: move
     text-align: center

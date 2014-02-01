@@ -8,21 +8,21 @@
         div.column-body
           - cards
             div.card data-resource="card" data-id="#{id}"
-              div.card-header
+              div.card-header title="double click for detailed view"
                 strong.card-title.editable data-field="title" = title
-              p.card-body.editable.text-area data-field="body" = body
+              p.card-body.edit_area data-field="body" = body
 javascript:
   function editableSubmit(){
       return { resource: findData(this,'data-resource'),
                field: findData(this,'data-field'),
                id: findData(this,'data-id')}};
-  $("#main .editable .textarea").editable("/change_field",{
+  $("#main .edit_area").editable("/change_field",{
       type: "textarea",
       submit: "OK",
       method: "PUT",
       indicator: "saving...",
       submitdata: editableSubmit,
-      cancel: "Cancel"}); 
+      cancel: "Cancel"});
   $("#main .editable").editable("/change_field",{
       submit: "OK",
       method: "PUT",
@@ -40,3 +40,7 @@ javascript:
       var board_id = $(e.target).closest('.board')[0].getAttribute('data-id');
     $.post('/columns/'+col_id+'/create_card',{},
            function(){displayBoard(board_id)})});
+  var i = 100;
+  $(function(){
+      $('.column').each(function(){
+          this.style.zIndex=i--})});
