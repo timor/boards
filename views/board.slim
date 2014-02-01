@@ -3,7 +3,9 @@
   div.board data-id="#{id}"
     - columns
       div.column data-id="#{id}" data-resource="column"
-        h2: span.column-title.editable data-field="title" = title
+        h2 style="display:table;width:100%"
+          span.column-title.editable style="display:table-cell;text-align:left" data-field="title" = title
+          span style="display:table-cell;text-align:right" = cards.length
         button.add-card add card
         div.column-body
           - cards

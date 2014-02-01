@@ -66,6 +66,7 @@ class Column
   property :title, String
   property :pos, Integer
   property :new_cards_allowed, Boolean, default: false
+  property :card_limit, Integer
   has n, :cards, constraint: :destroy
   belongs_to :board
   timestamps :at
